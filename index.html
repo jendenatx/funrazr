@@ -140,4 +140,36 @@ body .progress-bg div {
         	
         	<h3 class="goal">Goal: $5,000</h3>
     </div>
+<script>
+		// Replace the spreadsheetId and range with your own values
+		const spreadsheetId = '1_r9zPr2ChlW70VJfI5GsiCTqeJtxB-jALr6rZbl21Ng';
+		const range = 'B4';
+
+		// Replace the apiKey with your own API key
+		const apiKey = 'AIzaSyBpqFwb8Lj5WTJE0ldazYBKs5u_BC6BB7k';
+
+		// Construct the URL to retrieve the spreadsheet data
+		const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`;
+
+		// Update the progress bar every 15 minutes
+		setInterval(updateProgressBar, 900000); 
+
+		function updateProgressBar() {
+			// Fetch the spreadsheet data
+			fetch(url)
+			  .then(response => response.json())
+			  .then(data => {
+			    const rows = data.values;
+			    // Extract the amount raised and goal from the fetched data
+			    const amountRaised = parseInt(rows[0][0].replace(/[^0-9]/g, ''));
+			    const goal = parseInt(rows[1][0].replace(/[^0-9]/g, ''));
+			    const percentage = Math.round(amountRaised / goal * 100);
+			    document.getElementById("bar").innerHTML = percentage + "%";
+			    document.getElementById("bar").style.width = percentage + "%";
+			  })
+			  .catch(error => {
+			    console.error('Error:', error);
+			  });
+		}
+	</script>
 </html>
